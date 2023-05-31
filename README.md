@@ -6,7 +6,7 @@ This functionality was proposed to be included with the addition of `HEALTHCHECK
 This container is a stand-in till there is native support for `--exit-on-unhealthy` https://github.com/docker/docker/pull/22719 and https://github.com/moby/moby/issues/28400.
 
 ## Supported tags and Dockerfile links
-- `latest` [(*Dockerfile*)](https://github.com/modem7/docker-autoheal/blob/master/Dockerfile)
+- `latest` [(*Dockerfile*)](https://github.com/modem7/docker-autoheal/blob/master/Dockerfile) - Built weekly
 - `pinned`
 
 ![](https://img.shields.io/docker/pulls/modem7/docker-autoheal "Total docker pulls") [![](https://images.microbadger.com/badges/image/modem7/docker-autoheal.svg)](http://microbadger.com/images/modem7/docker-autoheal "Docker layer breakdown")

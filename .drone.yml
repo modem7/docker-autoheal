@@ -9,13 +9,6 @@ platform:
   arch: amd64
 
 steps:
-- name: Lint Dockerfile
-  image: hadolint/hadolint:latest-alpine
-  pull: if-not-exists
-  commands:
-    - hadolint --version
-    - hadolint Dockerfile*
-
 - name: latest
   image: thegeeklab/drone-docker-buildx
   privileged: true
@@ -36,29 +29,6 @@ steps:
     tags:
       - latest
 
-- name: pinned
-  image: thegeeklab/drone-docker-buildx
-  privileged: true
-  settings:
-    repo: ${DRONE_REPO}
-    purge: true
-    compress: true
-    use_cache: true
-    build_args: 
-      - BUILDKIT_INLINE_CACHE=1
-      - ALPINE_VER=alpine:3.15.0
-    cache_from: "${DRONE_REPO}:pinned"
-    platforms: # if it doesn't work run docker run --privileged --rm tonistiigi/binfmt --install all
-      - linux/amd64
-      - linux/arm64/v8
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    tags:
-      - pinned
-      - 1.2.0-alpine3.15.0
-
 - name: pushrm-dockerhub
   image: chko/docker-pushrm
   environment:
@@ -67,7 +37,7 @@ steps:
     DOCKER_PASS:
       from_secret: docker_password
     PUSHRM_FILE: README.md
-    PUSHRM_SHORT: Dockerised Rick Roll
+    PUSHRM_SHORT: Docker Autoheal
     PUSHRM_TARGET: ${DRONE_REPO}
   when:
     status:
@@ -83,4 +53,63 @@ steps:
 
 trigger:
   event:
+    - custom
+
+---
+
+kind: pipeline
+type: docker
+name: pinned
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: Trigger
+  image: plugins/git
+  commands:
+    - test $DRONE_BUILD_EVENT = pull_request
+      && DIFF_STRING=origin/${DRONE_COMMIT_BRANCH:-master}
+      || DIFF_STRING=${DRONE_COMMIT_SHA}~
+    - git --no-pager diff --name-only $DIFF_STRING
+      | grep -q -e ^[.]drone[.]
+      || exit 78
+
+- name: pinned
+  image: thegeeklab/drone-docker-buildx
+  privileged: true
+  settings:
+    repo: ${DRONE_REPO}
+    purge: true
+    compress: true
+    use_cache: true
+    build_args: 
+      - BUILDKIT_INLINE_CACHE=1
+      - ALPINE_VER=alpine:3.18.0
+    cache_from: "${DRONE_REPO}:pinned"
+    platforms: # if it doesn't work run docker run --privileged --rm tonistiigi/binfmt --install all
+      - linux/amd64
+      - linux/arm64/v8
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    tags:
+      - pinned
+
+- name: slack
+  image: themaz/drone-slack
+  settings:
+    webhook:
+      from_secret: slack_hook
+  when:
+    status: [ success, failure ]
+
+trigger:
+  branch:
+    - master
+  event:
+    include:
+    - push
     - custom
