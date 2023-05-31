@@ -3,14 +3,13 @@
 Monitor and restart unhealthy docker containers.
 Monitor and restart unhealthy docker containers.
 This functionality was proposed to be included with the addition of `HEALTHCHECK`, however didn't make the cut.
-This container is a stand-in till there is native support for `--exit-on-unhealthy` https://github.com/docker/docker/pull/22719.
+This container is a stand-in till there is native support for `--exit-on-unhealthy` https://github.com/docker/docker/pull/22719 and https://github.com/moby/moby/issues/28400.
 
 ## Supported tags and Dockerfile links
-- [`latest` (*Dockerfile*)](https://github.com/willfarrell/docker-autoheal/blob/main/Dockerfile) - Built daily
-- [`1.1.0` (*Dockerfile*)](https://github.com/willfarrell/docker-autoheal/blob/1.1.0/Dockerfile)
-- [`v0.7.0` (*Dockerfile*)](https://github.com/willfarrell/docker-autoheal/blob/v0.7.0/Dockerfile)
+- `latest` [(*Dockerfile*)](https://github.com/modem7/docker-autoheal/blob/master/Dockerfile)
+- `pinned`
 
-![](https://img.shields.io/docker/pulls/willfarrell/autoheal "Total docker pulls") [![](https://images.microbadger.com/badges/image/willfarrell/autoheal.svg)](http://microbadger.com/images/willfarrell/autoheal "Docker layer breakdown")
+![](https://img.shields.io/docker/pulls/modem7/docker-autoheal "Total docker pulls") [![](https://images.microbadger.com/badges/image/modem7/docker-autoheal.svg)](http://microbadger.com/images/modem7/docker-autoheal "Docker layer breakdown")
 
 ## How to use
 ### UNIX socket passthrough
@@ -20,7 +19,7 @@ docker run -d \
     --restart=always \
     -e AUTOHEAL_CONTAINER_LABEL=all \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    willfarrell/autoheal
+    modem7/docker-autoheal
 ```
 ### TCP socket
 ```bash
@@ -30,7 +29,7 @@ docker run -d \
     -e AUTOHEAL_CONTAINER_LABEL=all \
     -e DOCKER_SOCK=tcps://HOST:PORT \
     -v /path/to/certs/:/certs/:ro \
-    willfarrell/autoheal
+    modem7/docker-autoheal
 ```
 a) Apply the label `autoheal=true` to your container to have it watched.
 
