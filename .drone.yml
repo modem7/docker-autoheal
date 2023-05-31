@@ -67,7 +67,7 @@ steps:
     DOCKER_PASS:
       from_secret: docker_password
     PUSHRM_FILE: README.md
-    PUSHRM_SHORT: Dockerised Rick Roll
+    PUSHRM_SHORT: Docker Autoheal
     PUSHRM_TARGET: ${DRONE_REPO}
   when:
     status:
