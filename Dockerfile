@@ -1,4 +1,8 @@
-FROM alpine:3.17.3
+# syntax = docker/dockerfile:latest
+
+ARG ALPINE_VER
+
+FROM "${ALPINE_VER:-"alpine:3.15.0"}" 
 
 RUN apk add --no-cache curl jq
 
