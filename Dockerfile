@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:latest
 
-FROM alpine:3.21.3
+FROM alpine:3.22.0
 
 RUN apk add --no-cache curl jq
 
