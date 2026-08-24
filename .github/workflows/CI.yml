@@ -10,9 +10,22 @@ on:
   workflow_dispatch:
 
 jobs:
+   lint:
+    runs-on: ubuntu-latest
+    name: Lint Dockerfile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Hadolint
+        uses: hadolint/hadolint-action@v3.4.0
+        with:
+          dockerfile: Dockerfile
+
    build:
     runs-on: ubuntu-latest
     name: Set up Docker
+    needs: lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
